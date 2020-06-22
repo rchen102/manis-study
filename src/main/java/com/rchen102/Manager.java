@@ -1,6 +1,7 @@
 package com.rchen102;
 
 import com.rchen102.conf.Configuration;
+import com.rchen102.ipc.RPC;
 import com.rchen102.protocol.ManagerProtocol;
 
 import java.io.Closeable;
@@ -22,7 +23,15 @@ public class Manager implements Closeable {
         return this.manisDb.setMaxTable(tableNum);
     }
 
+    private void closeConnectionToManisDb() {
+        RPC.stopProxy(manisDb);
+    }
+
     @Override
     public synchronized void close() throws IOException {
+        if (clientRunning) {
+            clientRunning = false;
+            closeConnectionToManisDb();
+        }
     }
 }
