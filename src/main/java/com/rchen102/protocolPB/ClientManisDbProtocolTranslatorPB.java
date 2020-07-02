@@ -1,6 +1,7 @@
 package com.rchen102.protocolPB;
 
 import com.google.protobuf.ServiceException;
+import com.rchen102.ipc.RPC;
 import com.rchen102.protocol.ClientProtocol;
 import com.rchen102.protocol.proto.ClientManisDbProtocolProtos;
 
@@ -29,5 +30,6 @@ public class ClientManisDbProtocolTranslatorPB implements
     }
     @Override
     public void close() throws IOException {
+        RPC.stopProxy(rpcProxy);
     }
 }

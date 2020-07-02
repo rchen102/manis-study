@@ -41,7 +41,7 @@ public class Client {
      * @param rpcKind - rpc 类型
      * @param rpcRequest - 包含序列化方法和参数
      * @param remoteId - rpc server
-     * @param serviceClass service class for rpc
+     * @param serviceClass service class for rpc，后续拓展使用，目前无用
      * @return rpc 返回值
      * @throws IOException 抛网络异常或者远程代码执行异常
      */

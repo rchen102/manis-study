@@ -1,6 +1,7 @@
 package com.rchen102;
 
 import com.rchen102.conf.Configuration;
+import com.rchen102.ipc.RPC;
 import com.rchen102.protocol.ClientProtocol;
 
 import java.io.Closeable;
@@ -22,8 +23,15 @@ public class ManisClient implements Closeable {
         return this.manisDb.getTableCount(dbName, tbName);
     }
 
+    private void closeConnectionToManisDb() {
+        RPC.stopProxy(manisDb);
+    }
+
     @Override
     public void close() throws IOException {
-        //TODO close db connection
+        if (clientRunning) {
+            clientRunning = false;
+            closeConnectionToManisDb();
+        }
     }
 }

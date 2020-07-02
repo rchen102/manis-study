@@ -8,8 +8,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+/**
+ * 用于封装返回值，与 Invocation 对应
+ */
 public class ObjectWritable implements Writable {
+    // 返回值类型
     private Class declaredClass;
+    // 返回值对象
     private Object instance;
 
     public ObjectWritable() {}

@@ -122,8 +122,8 @@ public class SerializableRpcEngine implements RpcEngine {
 
 
     private static class Invoker implements RpcInvocationHandler{
-        private Client.ConnectionId remoteId;
         private Client client;
+        private Client.ConnectionId remoteId;
         private final long clientProtocolVersion;
 
         private Invoker(Class<?> protocol, InetSocketAddress address,
