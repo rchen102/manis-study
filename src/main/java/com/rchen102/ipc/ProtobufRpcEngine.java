@@ -8,6 +8,7 @@ import com.rchen102.conf.Configuration;
 import com.rchen102.io.DataOutputOutputStream;
 import com.rchen102.io.Writable;
 import com.rchen102.ipc.protobuf.ProtobufRpcEngineProtos;
+import com.rchen102.ipc.protobuf.RpcHeaderProtos;
 import com.rchen102.util.ProtoUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -246,6 +247,19 @@ public class ProtobufRpcEngine implements RpcEngine {
         public String toString() {
             return requestHeader.getDeclaringClassProtocolName() + "." +
                     requestHeader.getMethodName();
+        }
+    }
+
+    public static class RpcRequestMessageWrapper extends
+            BaseRpcMessageWithHeader<RpcHeaderProtos.RpcRequestHeaderProto> {
+
+        public RpcRequestMessageWrapper(RpcHeaderProtos.RpcRequestHeaderProto requestHeader, Message theRequest) {
+            super(requestHeader, theRequest);
+        }
+
+        @Override
+        RpcHeaderProtos.RpcRequestHeaderProto parseHeaderFrom(byte[] bytes) throws IOException {
+            return RpcHeaderProtos.RpcRequestHeaderProto.parseFrom(bytes);
         }
     }
 

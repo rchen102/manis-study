@@ -1,5 +1,10 @@
 package com.rchen102.util;
 
+import com.google.protobuf.ByteString;
+import com.rchen102.ipc.RPC;
+import com.rchen102.ipc.protobuf.IpcConnectionContextProtos;
+import com.rchen102.ipc.protobuf.RpcHeaderProtos;
+
 import java.io.DataInput;
 import java.io.IOException;
 
@@ -47,5 +52,46 @@ public class ProtoUtil {
             }
         }
         return result;
+    }
+
+    public static IpcConnectionContextProtos.IpcConnectionContextProto makeIpcConnectionContext(
+            final String protocolName) {
+        IpcConnectionContextProtos.IpcConnectionContextProto.Builder retBuilder = IpcConnectionContextProtos.IpcConnectionContextProto.newBuilder();
+        retBuilder.setProtocol(protocolName);
+        /**
+         * 这里可以发送安全、授权以及用户信息相关的信息给服务端
+         * 为了简化，manis 中没有设置相关的信息
+         */
+        return retBuilder.build();
+    }
+
+    static RpcHeaderProtos.RpcKindProto convertRpcKind(RPC.RpcKind rpcKind) {
+        switch (rpcKind) {
+            case RPC_BUILTIN: return RpcHeaderProtos.RpcKindProto.RPC_BUILTIN;
+            case RPC_SERIALIZABLE: return RpcHeaderProtos.RpcKindProto.RPC_SERIALIZABLE;
+            case RPC_PROTOCOL_BUFFER: return RpcHeaderProtos.RpcKindProto.RPC_PROTOCOL_BUFFER;
+            default: return null;
+        }
+    }
+
+    public static RPC.RpcKind convertRpcKind(RpcHeaderProtos.RpcKindProto rpcKind) {
+        switch (rpcKind) {
+            case RPC_BUILTIN: return RPC.RpcKind.RPC_BUILTIN;
+            case RPC_SERIALIZABLE: return RPC.RpcKind.RPC_SERIALIZABLE;
+            case RPC_PROTOCOL_BUFFER: return RPC.RpcKind.RPC_PROTOCOL_BUFFER;
+            default: return null;
+        }
+    }
+
+    public static RpcHeaderProtos.RpcRequestHeaderProto makeRpcRequestHeader(RPC.RpcKind rpcKind,
+                                                                             RpcHeaderProtos.RpcRequestHeaderProto.OperationProto operation,
+                                                                             int callId, int retryCount, byte[] clientId) {
+        RpcHeaderProtos.RpcRequestHeaderProto.Builder retBuilder = RpcHeaderProtos.RpcRequestHeaderProto.newBuilder();
+
+        retBuilder.setRpcKind(convertRpcKind(rpcKind)).setRpcOp(operation)
+                .setCallId(callId).setRetryCount(retryCount)
+                .setClientId(ByteString.copyFrom(clientId));
+
+        return retBuilder.build();
     }
 }
